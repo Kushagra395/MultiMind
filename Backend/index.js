@@ -5,15 +5,17 @@ import dotenv from "dotenv"
 import { streamText } from "ai"
 import { groq } from "@ai-sdk/groq"
 import { google } from "@ai-sdk/google"
-
+console.log("1");
 dotenv.config()
 
 // ─── 2. EXPRESS APP ────────────────────────────────────────
+console.log("2");
 const app = express()
 app.use(cors())          
 app.use(express.json())   
 
 // ─── 3. MODEL DEFINITIONS ──────────────────────────────────
+console.log("3");
 const MODELS = {
   "groq-llama": groq("llama-3.3-70b-versatile"),
   "groq-gemma": groq("gemma2-9b-it"),
@@ -57,7 +59,7 @@ app.post("/api/chat/:modelId", async (req, res) => {
 
   res.end()
 })
-
+console.log("4");
 // ─── 5. SERVER START ───────────────────────────────────────
 app.listen(3001, () => {
   console.log("Backend running on http://localhost:3001")
