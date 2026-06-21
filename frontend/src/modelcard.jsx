@@ -31,7 +31,7 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
   const [text, setText] = useState("")          // streaming text yahan store hoga
   const [tokens, setTokens] = useState(null)    // token count
   const [loading, setLoading] = useState(false) // response aa raha hai ya nahi
-  
+
   const scrollRef = useRef(null)
   const theme = colorMaps[color]
 
@@ -54,8 +54,11 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
       setLoading(true)      // loading shuru
 
       try {
-        // backend ko request bhejo
-        const response = await fetch(`http://localhost:3001/api/chat/${modelId}`, {
+        // Vercel deployment: Use the backend URL from environment variables, otherwise use localhost
+        const backendBase = import.meta.env.VITE_BACKEND_URL || "http://localhost:3001"
+        const API_URL = `${backendBase}/api/chat/${modelId}`
+
+        const response = await fetch(API_URL, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt })
@@ -68,7 +71,7 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
         // ─── LOOP — chunks aate rahenge jab tak stream khatam na ho ──
         while (true) {
           const { done, value } = await reader.read()
-          
+
           if (done) break  // stream khatam, loop band karo
 
           // value raw bytes hote hain — text mein convert karo
@@ -90,7 +93,7 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
               }
               if (data.done) {
                 // stream khatam, token count save karo
-                if(data.usage) {
+                if (data.usage) {
                   setTokens(data.usage.totalTokens)
                 }
                 setLoading(false)
@@ -129,9 +132,9 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
           </div>
         )}
       </div>
-      
+
       {/* Content Area */}
-      <div 
+      <div
         ref={scrollRef}
         className="flex-1 p-5 overflow-y-auto text-[15px] leading-relaxed text-slate-300 whitespace-pre-wrap font-sans custom-scrollbar scroll-smooth"
       >
@@ -143,14 +146,14 @@ function ModelCard({ modelId, modelName, provider, color = "emerald", prompt }) 
             <p className="text-sm">Waiting for prompt...</p>
           </div>
         )}
-        
+
         {text}
-        
+
         {loading && !text && (
-           <div className="flex items-center gap-2 text-slate-500 text-sm h-full justify-center">
-             <div className="w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full animate-spin"></div>
-             Thinking...
-           </div>
+          <div className="flex items-center gap-2 text-slate-500 text-sm h-full justify-center">
+            <div className="w-4 h-4 border-2 border-slate-500 border-t-transparent rounded-full animate-spin"></div>
+            Thinking...
+          </div>
         )}
       </div>
     </div>
