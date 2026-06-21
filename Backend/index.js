@@ -19,7 +19,7 @@ console.log("3");
 const MODELS = {
   "groq-llama": groq("llama-3.3-70b-versatile"),
    "groq-gemma": groq("llama-3.1-8b-instant"),
-  "gemini-flash": google("gemini-1.5-flash"), // THIS MUST BE 1.5, 2.5 DOES NOT EXIST!
+  "gemini-flash": google("gemini-2.5-flash"), // THIS MUST BE 1.5, 2.5 DOES NOT EXIST!
 }
 
 
