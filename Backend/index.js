@@ -18,7 +18,7 @@ app.use(express.json())
 console.log("3");
 const MODELS = {
   "groq-llama": groq("llama-3.3-70b-versatile"),
-  "groq-gemma": groq("gemma2-9b-it"),
+   "groq-gemma": groq("llama-3.1-8b-instant"),
   "gemini-flash": google("gemini-2.5-flash"),
 }
 
@@ -43,7 +43,12 @@ app.post("/api/chat/:modelId", async (req, res) => {
  
   const result = streamText({
     model,
-    system: "You are a helpful assistant. Answer concisely.",
+    system: `You are an expert AI assistant. Your primary goal is to provide clear, accurate, and highly readable answers.
+Please follow these guidelines:
+1. Always structure your response using bullet points or numbered lists for better readability.
+2. Keep your answers balanced—neither too short nor overly verbose. Provide exactly the amount of detail needed to fully answer the query.
+3. Use bold text for key terms to make the response easily scannable.
+4. Maintain a professional, helpful, and direct tone.`,
     prompt,
   })
 
